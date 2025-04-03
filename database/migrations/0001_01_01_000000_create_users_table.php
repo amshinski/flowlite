@@ -22,7 +22,7 @@ return new class extends Migration
         });
 
         Schema::create('sessions', function (Blueprint $table) {
-            $table->uuid('id')->default(DB::raw('uuid_generate_v4()'))->primary();
+            $table->string('id')->primary();
             $table->foreignUuid('user_id')->nullable()->index();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
