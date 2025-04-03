@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -12,9 +13,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('team_user', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('team_id');
-            $table->foreignId('user_id');
+            $table->uuid('id')->default(DB::raw('uuid_generate_v4()'))->primary();
+            $table->foreignUuid('team_id');
+            $table->foreignUuid('user_id');
             $table->string('role')->nullable();
             $table->timestamps();
 
