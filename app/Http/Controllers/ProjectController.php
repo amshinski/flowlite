@@ -28,9 +28,7 @@ class ProjectController extends Controller
             'description' => 'nullable|string'
         ]);
 
-        $project = Project::create(array_merge($validated, [
-            'creator_id' => auth()->id()
-        ]));
+        $project = Project::create($validated);
 
         return redirect()->route('projects.show', $project);
     }
