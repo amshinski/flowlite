@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('telegram_id')->unique();
             $table->string('name');
             $table->foreignId('current_team_id')->nullable();
-            $table->string('profile_photo_path', 2048)->nullable();
+            $table->string('profile_photo_url', 2048)->nullable();
+            $table->rememberToken();
             $table->timestamps();
         });
 
