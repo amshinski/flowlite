@@ -1,90 +1,75 @@
-<script setup>
-import { Head, Link, useForm } from '@inertiajs/vue3';
-import AuthenticationCard from '@/Components/AuthenticationCard.vue';
-import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
-import Checkbox from '@/Components/Checkbox.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-
-defineProps({
-    canResetPassword: Boolean,
-    status: String,
-});
-
-const form = useForm({
-    email: '',
-    password: '',
-    remember: false,
-});
-
-const submit = () => {
-    form.transform(data => ({
-        ...data,
-        remember: form.remember ? 'on' : '',
-    })).post(route('login'), {
-        onFinish: () => form.reset('password'),
-    });
-};
-</script>
-
 <template>
     <Head title="Log in" />
 
-    <AuthenticationCard>
-        <template #logo>
-            <AuthenticationCardLogo />
-        </template>
+    <div class="relative bg-black w-full h-screen overflow-hidden">
+        <img
+            id="background"
+            class="absolute -left-20 top-0 max-w-[877px] object-cover object-center"
+            src="https://laravel.com/assets/img/welcome/background.svg" />
 
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
-            {{ status }}
+        <div class="grid place-content-center w-full h-full">
+            <div class="w-80 p-8
+                bg-gray-500 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-gray-100">
+                <Loader v-if="loading" />
+                <AuthenticationCardLogo
+                    v-if="!loading"
+                    class="flex flex-row justify-center mb-8"
+                    iconHeight="80px"
+                    iconSize="80px" />
+                <div v-show="!loading" ref="telegramWidgetContainer" class="flex flex-row justify-center"></div>
+            </div>
         </div>
-
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
-                <TextInput
-                    id="email"
-                    v-model="form.email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-                <TextInput
-                    id="password"
-                    v-model="form.password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    required
-                    autocomplete="current-password"
-                />
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="block mt-4">
-                <label class="flex items-center">
-                    <Checkbox v-model:checked="form.remember" name="remember" />
-                    <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">Remember me</span>
-                </label>
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <Link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                    Forgot your password?
-                </Link>
-
-                <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Log in
-                </PrimaryButton>
-            </div>
-        </form>
-    </AuthenticationCard>
+    </div>
 </template>
+
+<script setup>
+import { Head } from '@inertiajs/vue3';
+import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
+import { onMounted, ref } from 'vue';
+import Loader from '@/Components/Loader.vue';
+
+const loading = ref(true);
+const telegramWidgetContainer = ref(null);
+
+const addAuth = () => {
+    window.TelegramLoginWidget = function (d, s, id) {
+        let js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://telegram.org/js/telegram-widget.js?19";
+        fjs.parentNode.insertBefore(js, fjs);
+    };
+    TelegramLoginWidget(document, "script", "telegram-login-script");
+
+    window.TelegramLoginWidgetAuth = function (user) {
+        axios.post('/telegram/auth/callback', user)
+            .then(response => {
+                if (response.data.success) {
+                    window.location.href = response.data.redirect_url;
+                } else {
+                    alert('Authentication failed.');
+                }
+            })
+            .catch(error => {
+                console.error('Error during Telegram authentication:', error);
+            });
+    };
+
+    const scriptElement = document.createElement('script');
+    scriptElement.src = "https://telegram.org/js/telegram-widget.js?19";
+    scriptElement.setAttribute('data-telegram-login', 'flowlitebot');
+    scriptElement.setAttribute('data-size', 'large');
+    scriptElement.setAttribute('data-auth-url', '/telegram/auth/callback');
+    scriptElement.setAttribute('data-request-access', 'write');
+    telegramWidgetContainer.value.appendChild(scriptElement);
+};
+
+onMounted(() => {
+    addAuth();
+
+    const timerId = setTimeout(() => {
+        loading.value = false;
+    }, 1000);
+});
+</script>
