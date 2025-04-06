@@ -16,7 +16,6 @@ return new class extends Migration
             $table->uuid('id')->default(DB::raw('uuid_generate_v4()'))->primary();
             $table->string('telegram_id')->unique();
             $table->string('name');
-            $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_url', 2048)->nullable();
             $table->rememberToken();
             $table->timestamps();

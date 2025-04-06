@@ -15,10 +15,9 @@ return new class extends Migration
         Schema::create('team_invitations', function (Blueprint $table) {
             $table->uuid('id')->default(DB::raw('uuid_generate_v4()'))->primary();
             $table->foreignUuid('team_id')->constrained()->cascadeOnDelete();
+            $table->string('token')->unique();
             $table->string('role')->nullable();
             $table->timestamps();
-
-            $table->unique(['team_id']);
         });
     }
 

@@ -12,14 +12,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('team_user', function (Blueprint $table) {
-            $table->foreignUuid('team_id')->constrained();
-            $table->foreignUuid('user_id')->constrained();
-            $table->string('role')->nullable();
+        Schema::create('files', function (Blueprint $table) {
+            $table->uuid('id')->default(DB::raw('uuid_generate_v4()'))->primary();
+            $table->string('path');
+            $table->string('name');
+            $table->uuidMorphs('fileable'); // e.g., Task or Comment
             $table->timestamps();
 
-            $table->primary(['team_id', 'user_id']);
-            $table->index('user_id');
+            $table->index(['fileable_id', 'fileable_type']);
         });
     }
 
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('team_user');
+        Schema::dropIfExists('files');
     }
 };

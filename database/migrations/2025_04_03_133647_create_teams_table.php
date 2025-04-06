@@ -14,9 +14,9 @@ return new class extends Migration
     {
         Schema::create('teams', function (Blueprint $table) {
             $table->uuid('id')->default(DB::raw('uuid_generate_v4()'))->primary();
-            $table->foreignUuid('user_id')->index();
+            $table->foreignUuid('creator_id')->constrained('users')->noActionOnDelete();
+            $table->foreignUuid('project_id')->constrained();
             $table->string('name');
-            $table->boolean('personal_team');
             $table->timestamps();
         });
     }
