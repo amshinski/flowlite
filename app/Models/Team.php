@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Laravel\Jetstream\Events\TeamCreated;
 use Laravel\Jetstream\Events\TeamDeleted;
 use Laravel\Jetstream\Events\TeamUpdated;
@@ -23,6 +25,10 @@ class Team extends JetstreamTeam
     protected $fillable = [
         'name',
         'personal_team',
+    ];
+
+    protected $appends = [
+        'members_count'
     ];
 
     /**
@@ -46,5 +52,23 @@ class Team extends JetstreamTeam
         return [
             'personal_team' => 'boolean',
         ];
+    }
+
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'creator_id');
+    }
+
+    public function members(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'team_user')
+            ->using(TeamUser::class)
+            ->withPivot('role')
+            ->withTimestamps();
+    }
+
+    public function getMembersCountAttribute(): int
+    {
+        return $this->members()->count();
     }
 }

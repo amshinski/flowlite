@@ -13,7 +13,7 @@ class Project extends Model
 
     protected $fillable = [
         'name',
-        'description'
+        'description',
     ];
 
     // Relationships
@@ -25,5 +25,14 @@ class Project extends Model
     public function teams(): HasMany
     {
         return $this->hasMany(Team::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($project) {
+            $project->creator_id = auth()->id();
+        });
     }
 }
