@@ -16,7 +16,6 @@ class Project extends Model
         'description',
     ];
 
-    // Relationships
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'creator_id');
@@ -27,7 +26,7 @@ class Project extends Model
         return $this->hasMany(Team::class);
     }
 
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 

@@ -30,7 +30,6 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'remember_token' => Str::random(10),
             'profile_photo_url' => null,
-            'current_team_id' => null,
         ];
     }
 

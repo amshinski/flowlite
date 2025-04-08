@@ -20,11 +20,9 @@ class TeamController extends Controller
             'name' => 'required|string|max:255'
         ]);
 
-        $team = $project->teams()->create(array_merge($validated, [
-            'creator_id' => auth()->id()
-        ]));
+        $project->teams()->create($validated);
 
-        return redirect()->route('teams.show', $team);
+        return redirect()->route('projects.show', $project);
     }
 
     public function show(Team $team)

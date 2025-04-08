@@ -13,7 +13,6 @@ use Laravel\Jetstream\HasTeams;
 class User extends Authenticatable
 {
     use HasFactory;
-    use HasProfilePhoto;
     use HasTeams;
     use Notifiable;
     use HasUuids;
@@ -41,5 +40,16 @@ class User extends Authenticatable
     public function ownedTeams(): HasMany
     {
         return $this->hasMany(Team::class, 'creator_id');
+    }
+
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class, 'creator_id');
+    }
+
+    public function getProfilePhotoUrlAttribute()
+    {
+        return $this->attributes['profile_photo_url']
+            ?? 'https://ui-avatars.com/api/?name='.urlencode($this->name).'&color=EBF4FF&background=3B3C3D';
     }
 }

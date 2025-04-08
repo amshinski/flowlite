@@ -27,5 +27,16 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 : [],
         ]);
     })->name('dashboard');
+
     Route::resource('projects', \App\Http\Controllers\ProjectController::class);
+
+    Route::prefix('projects/{project}')->group(function () {
+        Route::resource('teams', \App\Http\Controllers\TeamController::class)
+            ->names([
+                'store' => 'projects.teams.store',
+                'show' => 'projects.teams.show',
+                'update' => 'projects.teams.update',
+                'destroy' => 'projects.teams.destroy',
+            ]);
+    });
 });

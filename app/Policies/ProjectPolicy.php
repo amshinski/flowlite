@@ -12,12 +12,15 @@ class ProjectPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->projects()->exists() || $user->teams()->exists();
     }
 
     public function view(User $user, Project $project): bool
     {
-        return $user->belongsToTeam($project->team);
+        return $user->id === $project->creator_id ||
+            $project->teams()->whereHas('members', function($q) use ($user) {
+                $q->where('users.id', $user->id);
+            })->exists();
     }
 
     public function create(User $user): true

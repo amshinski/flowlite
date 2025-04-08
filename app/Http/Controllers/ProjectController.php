@@ -37,9 +37,15 @@ class ProjectController extends Controller
     {
         $this->authorize('view', $project);
 
+        $project->load(['teams.members', 'creator']);
+
+        $existingMemberIds = $project->teams->flatMap(function ($team) {
+            return $team->members->pluck('id');
+        })->unique()->values()->toArray();
+
         return Inertia::render('Projects/Show', [
-            'project' => $project->load(['teams', 'creator']),
-            'availableUsers' => User::whereNotIn('id', $project->teams->pluck('members.*.id'))->get()
+            'project' => $project,
+            'availableUsers' => User::whereNotIn('id', $existingMemberIds)->get()
         ]);
     }
 
@@ -48,7 +54,7 @@ class ProjectController extends Controller
         $this->authorize('update', $project);
 
         $validated = $request->validate([
-            'name' => 'sometimes|string|max:255',
+            'name' => 'required|string|max:255',
             'description' => 'nullable|string'
         ]);
 

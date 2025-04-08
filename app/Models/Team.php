@@ -24,7 +24,6 @@ class Team extends JetstreamTeam
      */
     protected $fillable = [
         'name',
-        'personal_team',
     ];
 
     protected $appends = [
@@ -42,18 +41,6 @@ class Team extends JetstreamTeam
         'deleted' => TeamDeleted::class,
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'personal_team' => 'boolean',
-        ];
-    }
-
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'creator_id');
@@ -70,5 +57,18 @@ class Team extends JetstreamTeam
     public function getMembersCountAttribute(): int
     {
         return $this->members()->count();
+    }
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function ($team) {
+            $team->creator_id = auth()->id();
+        });
+
+        static::created(function ($team) {
+            $team->members()->attach($team->creator_id, ['role' => 'admin']);
+        });
     }
 }
