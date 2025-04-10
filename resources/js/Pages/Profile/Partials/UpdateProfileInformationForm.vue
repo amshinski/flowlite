@@ -133,6 +133,7 @@ const clearPhotoFileInput = () => {
                     class="mt-1 block w-full"
                     required
                     autocomplete="name"
+                    disabled
                 />
                 <InputError :message="form.errors.name" class="mt-2" />
             </div>
@@ -143,7 +144,7 @@ const clearPhotoFileInput = () => {
                 Saved.
             </ActionMessage>
 
-            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="true">
                 Save
             </PrimaryButton>
         </template>
