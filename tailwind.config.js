@@ -17,6 +17,13 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            screens: Object.assign(
+                {
+                    '2xs': '320px',
+                    'xs': '480px'
+                },
+                defaultTheme.screens // Preserves default breakpoints
+            ),
         },
     },
 
