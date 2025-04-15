@@ -21,6 +21,13 @@ const createProject = () => {
         }
     });
 };
+
+const visitTeamPage = (projectId, teamId) => {
+    router.get(route('projects.teams.show', {
+        project: projectId,
+        team: teamId
+    }));
+};
 </script>
 
 <template>
@@ -59,18 +66,15 @@ const createProject = () => {
                             <li
                                 v-for="team in project.teams"
                                 :key="team.id"
-                                class="bg-white/5 hover:bg-white/10 p-3
+                                @click.prevent="visitTeamPage(project.id, team.id)"
+                                class="group flex items-center justify-between bg-white/5 hover:bg-white/10 p-3
                                     rounded-xl transition-all duration-200 cursor-pointer backdrop-blur-sm">
-                                <a
-                                    class="group flex items-center justify-between"
-                                    :href="route('projects.teams.show', { project: project.id, team: team.id })">
-                                    <span class="text-primary text-sm font-medium truncate">
-                                        {{ team.name }}
-                                    </span>
-                                    <span class="text-xs bg-white/5 text-secondary px-2.5 py-1 rounded-full">
-                                        {{ team.members_count }} {{ team.members_count === 1 ? 'member' : 'members' }}
-                                    </span>
-                                </a>
+                                <span class="text-primary text-sm font-medium truncate">
+                                    {{ team.name }}
+                                </span>
+                                <span class="text-xs bg-white/5 text-secondary px-2.5 py-1 rounded-full">
+                                    {{ team.members_count }} {{ team.members_count === 1 ? 'member' : 'members' }}
+                                </span>
                             </li>
                         </ul>
                     </div>
