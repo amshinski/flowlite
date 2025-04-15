@@ -38,5 +38,13 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 'update' => 'projects.teams.update',
                 'destroy' => 'projects.teams.destroy',
             ]);
+        Route::prefix('teams/{team}')->group(function () {
+            Route::get('/', [\App\Http\Controllers\TeamController::class, 'show'])
+                ->name('projects.teams.show');
+            Route::get('/{status}', [\App\Http\Controllers\TeamController::class, 'show'])
+                ->name('projects.teams.show.status');
+            Route::resource('tasks', \App\Http\Controllers\TaskController::class)
+                ->only(['store', 'show', 'update', 'destroy']);
+        });
     });
 });

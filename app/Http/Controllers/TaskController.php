@@ -2,31 +2,43 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
 use App\Models\Task;
 use App\Models\Team;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class TaskController extends Controller
 {
     use AuthorizesRequests;
 
-    public function store(Request $request, Team $team)
+    public function store(Request $request, Project $project, Team $team)
     {
         $this->authorize('create', [Task::class, $team]);
 
         $validated = $request->validate([
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[A-Za-z0-9\-\/.]+$/',
+                Rule::unique('tasks')->where('team_id', $team->id)
+            ],
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'required|string',
             'priority' => 'nullable|in:low,medium,high'
         ]);
 
-        $task = $team->tasks()->create(array_merge($validated, [
+        $team->tasks()->create(array_merge($validated, [
             'creator_id' => auth()->id()
         ]));
 
-        return redirect()->route('tasks.show', $task);
+        return redirect()->route('projects.teams.show', [
+            'project' => $project->id,
+            'team' => $team->id
+        ]);
     }
 
     public function show(Task $task)

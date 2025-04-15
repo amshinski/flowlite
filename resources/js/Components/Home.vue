@@ -32,8 +32,7 @@ const createProject = () => {
                 <div
                     v-for="project in projects"
                     :key="project.id"
-                    class="bg-gray-800/40 border border-white/10 rounded-2xl p-6 backdrop-blur-lg
-                        hover:border-indigo-300/30 transition-all duration-300 shadow-2xl shadow-black/30">
+                    class="glass-dark p-6">
                     <div class="flex justify-between items-start mb-4 gap-4">
                         <a :href="route('projects.show', { project: project.id })" class="flex-1 min-w-0">
                             <h3 class="text-xl font-semibold text-gray-200 truncate">
@@ -53,17 +52,25 @@ const createProject = () => {
 
                     <!-- Teams List -->
                     <div v-if="project.teams.length > 0" class="border-t border-white/10 pt-4">
-                        <h4 class="text-sm font-semibold text-indigo-300/80 mb-3">Teams</h4>
+                        <h4 class="text-sm font-semibold text-indigo-300/80 mb-3">
+                            Teams
+                        </h4>
                         <ul class="space-y-3">
                             <li
                                 v-for="team in project.teams"
                                 :key="team.id"
-                                class="group flex items-center justify-between bg-white/5 hover:bg-white/10 p-3
+                                class="bg-white/5 hover:bg-white/10 p-3
                                     rounded-xl transition-all duration-200 cursor-pointer backdrop-blur-sm">
-                                <span class="text-gray-200/90 text-sm font-medium truncate">{{ team.name }}</span>
-                                <span class="text-xs bg-white/5 text-gray-400 px-2.5 py-1 rounded-full">
-                                    {{ team.members_count }} members
-                                </span>
+                                <a
+                                    class="group flex items-center justify-between"
+                                    :href="route('projects.teams.show', { project: project.id, team: team.id })">
+                                    <span class="text-gray-200/90 text-sm font-medium truncate">
+                                        {{ team.name }}
+                                    </span>
+                                    <span class="text-xs bg-white/5 text-gray-400 px-2.5 py-1 rounded-full">
+                                        {{ team.members_count }} {{ team.members_count === 1 ? 'member' : 'members' }}
+                                    </span>
+                                </a>
                             </li>
                         </ul>
                     </div>

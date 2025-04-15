@@ -25,15 +25,32 @@ class TeamController extends Controller
         return redirect()->route('projects.show', $project);
     }
 
-    public function show(Team $team)
+    public function show(Project $project, Team $team, $status = null)
     {
         $this->authorize('view', $team);
 
+        if ($status === null) $status = 'planned';
+
+        $tasks = $team->tasks()
+            ->when($status, fn($q) => $q->where('status', $status))
+            ->with(['creator', 'maintainers'])
+            ->get();
+
+        $statuses = [
+            'planned' => 'Planned',
+            'in_work' => 'In Work',
+            'testing' => 'Testing',
+            'finished' => 'Finished'
+        ];
+
+        unset($statuses[$status]);
+
         return Inertia::render('Teams/Show', [
-            'team' => $team->load(['tasks', 'members', 'creator']),
-            'tasks' => $team->tasks()
-                ->with(['creator', 'maintainers'])
-                ->paginate()
+            'project' => $project,
+            'team' => $team->load(['members', 'creator']),
+            'tasks' => $tasks,
+            'status' => $status,
+            'statuses' => $statuses,
         ]);
     }
 
@@ -49,7 +66,7 @@ class TeamController extends Controller
         return redirect()->back();
     }
 
-    public function destroy(Team $team)
+    public function destroy(Project $project, Team $team)
     {
         $this->authorize('delete', $team);
         $team->delete();

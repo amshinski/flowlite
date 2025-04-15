@@ -15,6 +15,7 @@ class Task extends BaseModel
     protected $table = 'tasks';
 
     protected $fillable = [
+        'name',
         'title',
         'description',
         'status',
@@ -42,7 +43,8 @@ class Task extends BaseModel
     {
         return $this->belongsToMany(User::class)
             ->using(TaskUser::class)
-            ->withTimestamps();
+            ->withPivot([])
+            ->as('maintainer');
     }
 
     public function comments(): HasMany
@@ -63,5 +65,18 @@ class Task extends BaseModel
     public function scopeNotArchived($query)
     {
         return $query->where('is_archived', false);
+    }
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function ($task) {
+            $task->creator_id = auth()->id();
+        });
+
+        static::created(function ($task) {
+            $task->maintainers()->attach(auth()->id());
+        });
     }
 }

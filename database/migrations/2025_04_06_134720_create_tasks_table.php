@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->uuid('id')->default(DB::raw('uuid_generate_v4()'))->primary();
             $table->foreignUuid('team_id')->constrained()->cascadeOnDelete();
             $table->foreignUuid('creator_id')->constrained('users')->noActionOnDelete();
+            $table->string('name');
             $table->string('title');
             $table->text('description');
             $table->enum('status', ['planned', 'in_work', 'testing', 'finished'])->default('planned');
@@ -25,7 +26,11 @@ return new class extends Migration {
 
             $table->index('status');
             $table->index('is_archived');
+
+            $table->unique(['name', 'team_id']);
         });
+
+        DB::statement("ALTER TABLE tasks ADD CONSTRAINT tasks_name_check CHECK (name ~ '^[A-Za-z0-9\\-\\./]+$')");
     }
 
     /**

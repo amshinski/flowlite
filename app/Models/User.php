@@ -4,16 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Jetstream\HasProfilePhoto;
-use Laravel\Jetstream\HasTeams;
 
 class User extends Authenticatable
 {
     use HasFactory;
-    use HasTeams;
     use Notifiable;
     use HasUuids;
 
@@ -40,6 +38,19 @@ class User extends Authenticatable
     public function ownedTeams(): HasMany
     {
         return $this->hasMany(Team::class, 'creator_id');
+    }
+
+    public function teams(): BelongsToMany
+    {
+        return $this->belongsToMany(Team::class, 'team_user')
+            ->using(TeamUser::class)
+            ->withPivot('role')
+            ->withTimestamps();
+    }
+
+    public function belongsToTeam($team): bool
+    {
+        return $this->teams()->where('team_id', $team->id)->exists();
     }
 
     public function projects(): HasMany

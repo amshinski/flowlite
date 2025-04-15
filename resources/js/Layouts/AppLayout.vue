@@ -8,8 +8,32 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 
-defineProps({
-    title: String,
+const props = defineProps({
+    title: {
+        required: false,
+        type: String
+    },
+    hasDashboard: {
+        required: false,
+        type: Boolean,
+        default: true
+    },
+    project: {
+        required: false,
+        type: Object
+    },
+    team: {
+        required: false,
+        type: Object
+    },
+    status: {
+        required: false,
+        type: String,
+    },
+    statuses: {
+        required: false,
+        type: Object
+    },
 });
 
 const showingNavigationDropdown = ref(false);
@@ -34,14 +58,24 @@ const logout = () => {
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
                                 <Link :href="route('dashboard')">
-                                    <ApplicationMark class="block h-9 w-auto" />
+                                    <ApplicationMark :status="status" class="block size-9 w-auto" />
                                 </Link>
                             </div>
 
                             <!-- Navigation Links -->
-                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                            <div v-if="hasDashboard" class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
+                                </NavLink>
+                            </div>
+
+                            <div v-for="(status, key) in statuses" class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <NavLink :href="route('projects.teams.show.status', {
+                                        project: project.id,
+                                        team: team.id,
+                                        status: key
+                                    })">
+                                    {{ status }}
                                 </NavLink>
                             </div>
                         </div>
@@ -147,9 +181,19 @@ const logout = () => {
                 <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}"
                      class="sm:hidden">
                     <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                        <ResponsiveNavLink v-if="hasDashboard" :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
                         </ResponsiveNavLink>
+
+                        <div v-for="(status, key) in statuses">
+                            <ResponsiveNavLink :href="route('projects.teams.show.status', {
+                                    project: project.id,
+                                    team: team.id,
+                                    status: key
+                                })">
+                                {{ status }}
+                            </ResponsiveNavLink>
+                        </div>
                     </div>
 
                     <!-- Responsive Settings Options -->

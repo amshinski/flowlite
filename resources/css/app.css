@@ -5,3 +5,16 @@
 [x-cloak] {
     display: none;
 }
+
+.text-primary {
+    @apply text-gray-200;
+}
+
+.text-secondary {
+    @apply text-indigo-300/80;
+}
+
+.glass-dark {
+    @apply bg-gray-800/40 border border-white/10 rounded-2xl backdrop-blur-lg transform
+        hover:border-indigo-300/30 transition-all duration-300 shadow-2xl shadow-black/30;
+}
