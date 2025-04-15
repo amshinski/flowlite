@@ -35,24 +35,24 @@ const createProject = () => {
                     class="glass-dark p-6">
                     <div class="flex justify-between items-start mb-4 gap-4">
                         <a :href="route('projects.show', { project: project.id })" class="flex-1 min-w-0">
-                            <h3 class="text-xl font-semibold text-gray-200 truncate">
+                            <h3 class="text-xl font-semibold text-primary truncate">
                                 {{ project.name }}
                             </h3>
                         </a>
                         <div class="flex-shrink-0">
-                            <span class="text-sm bg-white/5 text-indigo-300 px-3 py-1 rounded-full backdrop-blur-sm">
+                            <span class="text-sm bg-white/5 text-secondary px-3 py-1 rounded-full backdrop-blur-sm">
                                 {{ project.teams_count }}
                             </span>
                         </div>
                     </div>
 
-                    <p class="text-gray-300/80 mb-6 text-sm" v-if="project.description">
+                    <p class="text-secondary mb-6 text-sm" v-if="project.description">
                         {{ project.description }}
                     </p>
 
                     <!-- Teams List -->
                     <div v-if="project.teams.length > 0" class="border-t border-white/10 pt-4">
-                        <h4 class="text-sm font-semibold text-indigo-300/80 mb-3">
+                        <h4 class="text-sm font-semibold text-secondary mb-3">
                             Teams
                         </h4>
                         <ul class="space-y-3">
@@ -64,10 +64,10 @@ const createProject = () => {
                                 <a
                                     class="group flex items-center justify-between"
                                     :href="route('projects.teams.show', { project: project.id, team: team.id })">
-                                    <span class="text-gray-200/90 text-sm font-medium truncate">
+                                    <span class="text-primary text-sm font-medium truncate">
                                         {{ team.name }}
                                     </span>
-                                    <span class="text-xs bg-white/5 text-gray-400 px-2.5 py-1 rounded-full">
+                                    <span class="text-xs bg-white/5 text-secondary px-2.5 py-1 rounded-full">
                                         {{ team.members_count }} {{ team.members_count === 1 ? 'member' : 'members' }}
                                     </span>
                                 </a>
@@ -81,7 +81,7 @@ const createProject = () => {
                     v-if="projects.length === 0"
                     class="col-span-full text-center py-12 border-2 border-dashed border-white/10 rounded-2xl
                         bg-gray-900/30 backdrop-blur-lg">
-                    <div class="text-gray-400/70 mb-4">
+                    <div class="text-primary mb-4">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto" fill="none"
                              viewBox="0 0 24 24" stroke="currentColor">
                             <path
@@ -93,7 +93,7 @@ const createProject = () => {
                                     012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                         </svg>
                     </div>
-                    <p class="text-gray-300/80 font-medium">No projects found</p>
+                    <p class="text-primary font-medium">No projects found</p>
                 </div>
             </div>
 
@@ -101,12 +101,12 @@ const createProject = () => {
             <div
                 class="bg-gray-800/30 border border-white/10 rounded-2xl p-6 shadow-2xl shadow-black/30
                     backdrop-blur-lg">
-                <h2 class="text-2xl font-bold mb-4 text-gray-200">
+                <h2 class="text-2xl font-bold mb-4 text-primary">
                     New Project
                 </h2>
                 <form @submit.prevent="createProject">
                     <div class="mb-6">
-                        <label class="block text-gray-300/80 text-sm font-semibold mb-3">
+                        <label class="block text-secondary text-sm font-semibold mb-3">
                             Project Name
                         </label>
                         <TextInput
@@ -119,7 +119,7 @@ const createProject = () => {
                     </div>
 
                     <div class="mb-6">
-                        <label class="block text-gray-300/80 text-sm font-semibold mb-3">
+                        <label class="block text-secondary text-sm font-semibold mb-3">
                             Description
                         </label>
                         <TextArea

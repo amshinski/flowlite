@@ -59,7 +59,7 @@ const createTeam = () => {
 
                             <div class="flex justify-between items-start">
                                 <div class="w-96">
-                                    <h1 class="text-2xl font-bold text-gray-200">
+                                    <h1 class="text-2xl font-bold text-primary">
                                         <TextInput
                                             v-if="editMode"
                                             v-model="form.name"
@@ -68,7 +68,7 @@ const createTeam = () => {
                                         <span v-else>{{ project.name }}</span>
                                     </h1>
                                     <InputError v-if="editMode" :message="form.errors.name" class="mt-2" />
-                                    <p class="text-gray-400 mt-2 pb-2">
+                                    <p class="text-secondary mt-2 pb-2">
                                         <TextArea
                                             v-if="editMode"
                                             v-model="form.description"
@@ -99,7 +99,7 @@ const createTeam = () => {
 
                             <div class="border-t border-gray-700 pt-6 pb-2">
                                 <div class="flex justify-between items-center mb-4">
-                                    <h2 class="text-xl font-semibold text-gray-200">Project Teams</h2>
+                                    <h2 class="text-xl font-semibold text-primary">Project Teams</h2>
                                     <PrimaryButton v-if="!showTeamForm" @click="showTeamForm = !showTeamForm">
                                         Add Team
                                     </PrimaryButton>
@@ -135,20 +135,20 @@ const createTeam = () => {
                                         class="bg-gray-700/50 hover:bg-gray-600/60 rounded-lg p-4
                                             transition-colors backdrop-blur-sm">
                                         <div class="flex justify-between items-center">
-                                            <span class="text-gray-200 font-medium">{{ team.name }}</span>
-                                            <span class="text-sm bg-gray-800/40 text-gray-400 px-2 py-1 rounded-full">
+                                            <span class="text-primary font-medium">{{ team.name }}</span>
+                                            <span class="text-sm bg-gray-800/40 text-secondary px-2 py-1 rounded-full">
                                                 {{ team.members_count }} members
                                             </span>
                                         </div>
                                     </a>
                                 </div>
-                                <p v-if="project.teams.length === 0" class="text-gray-400 mt-4">
+                                <p v-if="project.teams.length === 0" class="text-secondary mt-4">
                                     No teams created yet.
                                 </p>
                             </div>
 
                             <div class="border-t border-gray-700 pt-6">
-                                <h2 class="text-xl font-semibold text-gray-200 mb-4">Available Users</h2>
+                                <h2 class="text-xl font-semibold text-primary mb-4">Available Users</h2>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div
                                         v-for="user in availableUsers"
@@ -159,11 +159,11 @@ const createTeam = () => {
                                                 :src="user.profile_photo_url"
                                                 :alt="user.name"
                                                 class="h-8 w-8 rounded-full bg-gray-100">
-                                            <span class="text-gray-200">{{ user.name }}</span>
+                                            <span class="text-primary">{{ user.name }}</span>
                                         </div>
                                     </div>
                                 </div>
-                                <p v-if="availableUsers.length === 0" class="text-gray-400">
+                                <p v-if="availableUsers.length === 0" class="text-secondary">
                                     No available users outside current teams.
                                 </p>
                             </div>

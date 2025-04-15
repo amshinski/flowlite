@@ -93,7 +93,7 @@ const createTask = () => {
                     <select
                         v-model="taskForm.priority"
                         class="w-full px-4 py-3 bg-white/5 border rounded-xl block border-white/10
-                            placeholder-gray-400 text-gray-200 focus:ring-2 focus:ring-indigo-400/50
+                            placeholder-gray-400 text-primary focus:ring-2 focus:ring-indigo-400/50
                             focus:border-transparent">
                         <option
                             style="background-color: #111827"
@@ -128,7 +128,7 @@ const createTask = () => {
                 v-for="task in tasks"
                 class="glass-dark py-3 px-4 overflow-hidden">
                 <div class="flex flex-col">
-                    <div class="text-gray-200 mb-1.5">
+                    <div class="text-primary mb-1.5">
                         {{ task.name }}
                     </div>
                     <div class="border-t border-white/10 break-words text-sm text-secondary pt-2">
