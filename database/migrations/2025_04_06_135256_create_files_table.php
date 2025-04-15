@@ -14,6 +14,7 @@ return new class extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->uuid('id')->default(DB::raw('uuid_generate_v4()'))->primary();
+            $table->foreignUuid('task_id')->constrained()->cascadeOnDelete();
             $table->string('path');
             $table->string('name');
             $table->uuidMorphs('fileable'); // e.g., Task or Comment
